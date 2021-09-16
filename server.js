@@ -15,6 +15,7 @@ connectDB();
 
 // Route files
 const posts = require('./routes/posts');
+const comments = require('./routes/comments');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(mongoSanitize());
 
 // Mount routers
 app.use('/api/v1/posts', posts);
+app.use('/api/v1/comments', comments);
 
 app.use(errorHandler);
 

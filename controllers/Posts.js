@@ -5,9 +5,9 @@ const Post = require('../models/Post');
 // @desc      Get all posts
 // @route     GET /api/v1/posts
 // @access    Public
-exports.getPosts = asyncHandler(async (req, res, next) => {   
+exports.getPosts = asyncHandler(async (req, res, next) => {
 
-    const post = await Post.find({}).sort([['createdAt', -1]])
+    const post = await Post.find({}).sort([['createdAt', -1]]).populate('comments');
 
     res.status(201).json({
         success: true,
@@ -30,8 +30,8 @@ exports.createPost = asyncHandler(async (req, res, next) => {
 
 });
 
-// @desc      Update bootcamp
-// @route     PUT /api/v1/bootcamps/:id
+// @desc      Update post
+// @route     PUT /api/v1/posts/:id
 // @access    Private
 exports.updatePost = asyncHandler(async (req, res, next) => {
     let post = await Post.findById(req.params.id);
