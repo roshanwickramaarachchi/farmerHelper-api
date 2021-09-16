@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const colors = require('colors');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error');
 
 // Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -30,6 +31,8 @@ app.use(mongoSanitize());
 
 // Mount routers
 app.use('/api/v1/posts', posts);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
