@@ -5,8 +5,9 @@ const Post = require('../models/Post');
 // @desc      Get all posts
 // @route     GET /api/v1/posts
 // @access    Public
-exports.getPosts = asyncHandler(async (req, res, next) => {
-    const post = await Post.find();
+exports.getPosts = asyncHandler(async (req, res, next) => {   
+
+    const post = await Post.find({}).sort([['createdAt', -1]])
 
     res.status(201).json({
         success: true,
