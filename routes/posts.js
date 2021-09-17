@@ -1,5 +1,5 @@
 const express = require('express')
-const { getPosts, createPost,updatePost, deletePost } = require('../controllers/Posts')
+const { getPosts, createPost, updatePost, deletePost } = require('../controllers/Posts')
 
 const Post = require('../models/Post')
 
@@ -16,9 +16,9 @@ router
     .get(getPosts)
     .post(createPost)
 
-router 
-     .route('/:id')
-     .put(updatePost)
-     .delete(deletePost)
+router
+    .route('/:id')
+    .put(updatePost)
+    .delete(deletePost)
 
 module.exports = router;

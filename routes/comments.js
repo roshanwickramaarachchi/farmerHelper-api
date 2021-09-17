@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { 
+const {
     getComents,
     addComment,
     updateComent,
