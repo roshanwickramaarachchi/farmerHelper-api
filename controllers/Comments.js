@@ -24,6 +24,7 @@ exports.getComents = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.addComment = asyncHandler(async (req, res, next) => {
   req.body.post = req.params.postId;
+  req.body.user = req.user.id;
 
   const post = await Post.findById(req.params.postId);
 
@@ -33,6 +34,16 @@ exports.addComment = asyncHandler(async (req, res, next) => {
       404
     );
   }
+
+  // Make sure user is anmin or specialist
+  // if (req.user.role !== 'specialist' && req.user.role !== 'admin') {
+  //   return next(
+  //     new ErrorResponse(
+  //       `User ${req.user.id} is not authorized to add a comment to post ${post._id}`,
+  //       401,
+  //     ),
+  //   );
+  // }
 
   const comment = await Comment.create(req.body);
 
@@ -52,6 +63,16 @@ exports.updateComent = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(`No comment with the id of ${req.params.id}`),
       404
+    );
+  }
+
+  // Make sure user is comment owner
+  if (comment.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} is not authorized to update comment ${comment._id}`,
+        401,
+      ),
     );
   }
 
@@ -79,6 +100,15 @@ exports.deleteComment = asyncHandler(async (req, res, next) => {
     );
   }
 
+  // Make sure user is comment owner
+  if (comment.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} is not authorized to delete comment ${comment._id}`,
+        401,
+      ),
+    );
+  }
 
   await comment.remove();
 

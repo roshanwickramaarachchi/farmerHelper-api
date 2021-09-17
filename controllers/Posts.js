@@ -21,6 +21,9 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 // @route     POST /api/v1/posts
 // @access    Private
 exports.createPost = asyncHandler(async (req, res, next) => {
+    // Add user to req,body
+    req.body.user = req.user.id;
+
     const post = await Post.create(req.body);
 
     res.status(201).json({
@@ -39,6 +42,16 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
     if (!post) {
         return next(
             new ErrorResponse(`Post not found with id of ${req.params.id}`, 404)
+        );
+    }
+
+    // Make sure user is post owner
+    if (post.user.toString() !== req.user.id && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `User ${req.params.id} is not authorized to update this post`,
+                401,
+            ),
         );
     }
 
@@ -63,6 +76,16 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
     if (!post) {
         return next(
             new ErrorResponse(`Post not found with id of ${req.params.id}`, 404)
+        );
+    }
+
+    // Make sure user is post owner
+    if (post.user.toString() !== req.user.id && req.user.role !== 'admin') {
+        return next(
+            new ErrorResponse(
+                `User ${req.params.id} is not authorized to delete this post`,
+                401,
+            ),
         );
     }
 

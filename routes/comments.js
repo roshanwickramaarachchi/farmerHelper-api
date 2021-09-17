@@ -14,12 +14,12 @@ const { protect, authorize } = require('../middleware/auth');
 router
     .route('/')
     .get(protect, getComents)
-    .post(protect, authorize('specialist', 'admin'), addComment)
+    .post(protect,/*authorize('specialist', 'admin')*/ addComment)
 
 
 router
     .route('/:id')
-    .put(protect, authorize('specialist', 'admin'), updateComent)
-    .delete(protect, authorize('specialist', 'admin'), deleteComment)
+    .put(protect,/*authorize('specialist', 'admin')*/ updateComent)
+    .delete(protect,/*authorize('specialist', 'admin')*/deleteComment)
 
 module.exports = router;
