@@ -3,45 +3,59 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Please add a name']
+const UserSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, 'Please add a name']
+        },
+        email: {
+            type: String,
+            required: [true, 'Please add an email'],
+            unique: true,
+            match: [
+                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                'Please add a valid email'
+            ]
+        },
+        role: {
+            type: String,
+            enum: ['farmer', 'specialist'],
+            default: 'farmer'
+        },
+        password: {
+            type: String,
+            required: [true, 'Please add a password'],
+            minlength: 6,
+            select: false
+        },
+        photo: {
+            type: String,
+            //required: true,
+            default: 'no-photo.jpg'
+        },
+        description: {
+            type: String,
+            //required: [true, 'Please add a description'],
+            maxlength: [500, 'Description can not be more than 500 characters']
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
     },
-    email: {
-        type: String,
-        required: [true, 'Please add an email'],
-        unique: true,
-        match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
-        ]
-    },
-    role: {
-        type: String,
-        enum: ['farmer', 'specialist'],
-        default: 'farmer'
-    },
-    password: {
-        type: String,
-        required: [true, 'Please add a password'],
-        minlength: 6,
-        select: false
-    },
-    photo: {
-        type: String,
-        //required: true,
-        default: 'no-photo.jpg'
-    },
-    description: {
-        type: String,
-        //required: [true, 'Please add a description'],
-        maxlength: [500, 'Description can not be more than 500 characters']
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     }
+);
+
+// Reverse populate with virtuals
+UserSchema.virtual('posts', {
+    ref: 'Post',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: false
 });
 
 // Encrypt password using bcrypt   

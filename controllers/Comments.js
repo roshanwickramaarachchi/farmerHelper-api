@@ -9,7 +9,7 @@ const Post = require('../models/Post');
 // @access    Public
 exports.getComents = asyncHandler(async (req, res, next) => {
 
-  const comments = await Comment.find({ post: req.params.postId }).sort([['createdAt', -1]]);
+  const comments = await Comment.find({ post: req.params.postId }).populate('user').sort([['createdAt', -1]]);
 
   return res.status(200).json({
     success: true,
