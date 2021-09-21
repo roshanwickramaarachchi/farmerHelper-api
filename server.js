@@ -28,13 +28,14 @@ const users = require('./routes/users');
 const app = express();
 
 // Body parser
-app.use(express.json());
+//app.use(express.json());
+app.use(express.json({ extended: false, limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: false, parameterLimit: 50000 }))
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
 
 // File uploading 
 app.use(fileupload());
