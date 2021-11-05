@@ -7,7 +7,7 @@ const Post = require('../models/Post');
 // @access    Public
 exports.getPosts = asyncHandler(async (req, res, next) => {
 
-    const post = await Post.find({}).sort([['createdAt', -1]]);
+    const post = await Post.find({}).sort([['createdAt', -1]]).populate('user');
 
     res.status(201).json({
         success: true,
@@ -55,7 +55,7 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
         );
     }
 
-    post = await Post.findOneAndUpdate(req.params.id, req.body, {
+    post = await Post.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     });
